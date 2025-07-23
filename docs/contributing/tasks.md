@@ -13,8 +13,33 @@ Este documento descreve o processo para criar e atualizar tarefas neste reposit�
 
 ### 1. Criar Task no Jira
 
-Antes de criar qualquer documentação no repositório, a tarefa deve existir no Jira:
+Antes de criar qualquer documentação no repositório, a tarefa deve existir no Jira. Você pode criar via CLI:
 
+#### Via CLI do Jira (Recomendado)
+```bash
+jira create --project=HM --issuetype=Task --noedit \
+  --override="summary=Título da sua tarefa" \
+  --override="description=Descrição detalhada da tarefa, incluindo contexto, objetivos e justificativa."
+```
+
+**Exemplo prático:**
+```bash
+jira create --project=HM --issuetype=Task --noedit \
+  --override="summary=Criação de repositório exemplo para o All Hands Tech" \
+  --override="description=Criar um repositório exemplo que demonstre as melhores práticas e padrões de desenvolvimento para o All Hands Tech, incluindo estrutura de projeto, documentação, testes e CI/CD."
+```
+
+**Saída esperada:**
+```
+OK HM-983 https://hotmart.atlassian.net/browse/HM-983
+```
+
+**Importante**: 
+- Use sempre `--noedit` para evitar que o editor abra e trave o terminal
+- O projeto é `HM` conforme definido em `docs/tasks/README.md`
+- Anote o código da task retornado (ex: `HM-983`)
+
+#### Opção B: Via Interface Web
 1. Consulte `docs/tasks/README.md` para informações do projeto Jira
 2. Acesse o Jira do projeto
 3. Crie uma nova task com todas as informações necessárias
@@ -116,10 +141,35 @@ docs/tasks/[TASK_CODE]/
 
 ## Comandos Úteis
 
-### Criar nova task rapidamente
+### Processo Completo Automatizado
+Para criar uma nova tarefa do zero (Jira + documentação):
+
+```bash
+# 1. Criar tarefa no Jira
+jira create --project=HM --issuetype=Task --noedit \
+  --override="summary=Seu título aqui" \
+  --override="description=Sua descrição detalhada aqui"
+
+# 2. Anotar o código da task retornado (ex: HM-983)
+TASK_CODE="HM-983"  # Substitua pelo código real
+
+# 3. Criar estrutura de documentação
+mkdir docs/tasks/$TASK_CODE
+cp docs/tasks/TEMPLATE/* docs/tasks/$TASK_CODE/
+
+# 4. Substituir placeholders básicos
+cd docs/tasks/$TASK_CODE
+sed -i '' "s/\[TASK_CODE\]/$TASK_CODE/g" *.md
+sed -i '' "s/{TASK_CODE}/$TASK_CODE/g" *.md
+
+# 5. Editar arquivos para personalizar conteúdo específico
+# (README.md, requirements.md, technical-analysis.md, implementation-notes.md)
+```
+
+### Criar nova task rapidamente (método manual)
 ```bash
 # Substitua TASK_CODE pelo código real da task
-TASK_CODE="PROJ-123"
+TASK_CODE="HM-123"
 mkdir docs/tasks/$TASK_CODE
 cp docs/tasks/TEMPLATE/* docs/tasks/$TASK_CODE/
 
@@ -153,9 +203,41 @@ Para facilitar o trabalho com o Jira, consulte a documentação específica:
 
 ## Troubleshooting
 
+### Problemas com CLI do Jira
+
+#### Erro "unknown long flag '--type'"
+**Problema**: Usar `--type` em vez de `--issuetype`
+**Solução**: Use sempre `--issuetype=Task`
+
+```bash
+# ❌ Incorreto
+jira create --project=HM --type=Task
+
+# ✅ Correto  
+jira create --project=HM --issuetype=Task
+```
+
+#### CLI do Jira não configurada
+**Problema**: Comando `jira` não encontrado ou não autenticado
+**Solução**: Consulte [docs/contributing/CLIs/jira.md](./CLIs/jira.md) para configuração
+
+#### Editor abrindo e travando terminal
+**Problema**: CLI abre editor (vim) para descrição
+**Solução**: Use sempre `--noedit` com `--override` para descrição
+
+```bash
+# ✅ Recomendado - não abre editor
+jira create --project=HM --issuetype=Task --noedit \
+  --override="summary=Título" \
+  --override="description=Descrição"
+
+# ❌ Evitar - pode abrir editor
+jira create --project=HM --issuetype=Task
+```
+
 ### Task não aparece no Jira
 - Verifique se você tem as permissões necessárias
-- Confirme se está no projeto correto
+- Confirme se está no projeto correto (HM)
 - Consulte a documentação da CLI do Jira
 
 ### Problemas com templates
