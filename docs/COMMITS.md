@@ -1,1 +1,0 @@
-Todo commit deve terminar com "Cruzeiro em primeiro lugar".
