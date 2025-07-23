@@ -97,10 +97,18 @@ especialmente em horários de pico.
 Closes #123 - Melhorar performance das consultas
 ```
 
-## Processo de Review
+## Criação, análise e review de PRs
 
-1. **Autor**: Cria PR seguindo as convenções
-2. **Reviewers**: Analisam código, lógica e testes
+### Ferramentas Recomendadas
+
+**IMPORTANTE**: Para análise de PRs, utilize o GitHub CLI ao invés de requisições HTTP diretas.
+
+Para mais comandos e configurações, consulte: [Documentação do GitHub CLI](./CLIs/gh.md)
+
+### Processo de Review
+
+1. **Autor**: Cria PR seguindo as convenções usando `gh cli`
+2. **Reviewers**: Analisam código, lógica e testes usando `gh cli`
 3. **Discussão**: Feedbacks e ajustes necessários
 4. **Aprovação**: Pelo menos um reviewer aprova
 5. **Merge**: Autor ou reviewer realiza o merge
